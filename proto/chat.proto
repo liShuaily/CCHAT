@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package chat;
+
+message StandardResponse { bool success = 1; string message = 2; }
+
+message RegisterRequest { string account_id = 1; string nickname = 2; string password = 3; }
+message LoginRequest { string account_id = 1; string password = 2; }
+message LoginResponse { bool success = 1; string message = 2; string account_id = 3; string nickname = 4; string avatar_url = 5; }
+message UpdateProfileRequest {
+    string account_id = 1;
+    string nickname = 2;
+    string avatar_url = 3;
+}
+
+message FriendReqMsg { string my_account = 1; string target_account = 2; }
+message HandleReqMsg { string my_account = 1; string sender_account = 2; bool accept = 3; }
+message SetAliasRequest { string my_account = 1; string target_account = 2; string alias = 3; }
+message UserRequest { string account_id = 1; }
+
+message FriendInfo { string account_id = 1; string nickname = 2; string avatar_url = 3; string alias = 4; }
+message FriendsListResponse { repeated FriendInfo friends = 1; }
+message PendingListResponse { repeated FriendInfo pending_users = 1; }
+
+message ChatMessage { string msg_uuid = 1; string user_id = 2; string receiver = 3; string text = 4; string timestamp = 5; bool is_recalled = 6; string type = 7; string sender_avatar = 8; string sender_name = 9; }
+message MessageActionRequest { string account_id = 1; string msg_uuid = 2; }
+message ClearChatRequest { string account_id = 1; string target_account = 2; }
+message SyncResponse { repeated ChatMessage messages = 1; }
+
+service ChatService {
+    rpc Register(RegisterRequest) returns (StandardResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc UpdateProfile(UpdateProfileRequest) returns (StandardResponse);
+    rpc SendFriendRequest(FriendReqMsg) returns (StandardResponse);
+    rpc GetPendingRequests(UserRequest) returns (PendingListResponse);
+    rpc HandleFriendRequest(HandleReqMsg) returns (StandardResponse);
+    rpc RemoveFriend(FriendReqMsg) returns (StandardResponse);
+    rpc GetFriendsList(UserRequest) returns (FriendsListResponse);
+    rpc SetFriendAlias(SetAliasRequest) returns (StandardResponse);
+    rpc ChatStream(stream ChatMessage) returns (stream ChatMessage);
+    rpc RecallMessage(MessageActionRequest) returns (StandardResponse);
+    rpc DeleteLocalMessage(MessageActionRequest) returns (StandardResponse);
+    rpc ClearChat(ClearChatRequest) returns (StandardResponse);
+    rpc SyncMessages(UserRequest) returns (SyncResponse);
+}

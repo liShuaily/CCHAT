@@ -1,0 +1,22 @@
+# 忽略编译目录
+build/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# 忽略 Node.js 依赖
+node_modules/
+
+# 忽略用户上传的文件
+uploads/
+
+# 忽略由 Protobuf 自动生成的 C++ 文件
+*.pb.cc
+*.pb.h
+
+# 忽略可执行文件
+server
+
+# 绝对禁止将第三方依赖包传上云端！！！
+third_party/
